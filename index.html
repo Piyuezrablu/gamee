@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ini project kedua aku seng 🌙</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================
+   CSS VARIABLES & RESET
+   ============================================ */
+:root {
+  --bg-deep:        #020813;
+  --bg-mid:         #050f24;
+  --blue-dark:      #0a1a3e;
+  --blue-mid:       #1a3a7c;
+  --blue-light:     #2a5ccf;
+  --blue-glow:      #4d8bff;
+  --blue-soft:      #a8c4ff;
+  --blue-pale:      #d4e4ff;
+  --accent-pink:    #ff6b9d;
+  --accent-rose:    #ff4b7e;
+  --gold:           #f0c060;
+  --white:          #ffffff;
+  --text-main:      #e8f0ff;
+  --text-muted:     #7a9acc;
+
+  --font-title:  'Cinzel Decorative', serif;
+  --font-body:   'Cormorant Garamond', serif;
+  --font-ui:     'DM Sans', sans-serif;
+
+  --radius:  16px;
+  --shadow-glow: 0 0 40px rgba(77,139,255,0.35);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: var(--bg-deep);
+  color: var(--text-main);
+  font-family: var(--font-body);
+}
+
+/* ============================================
+   STAR BACKGROUND
+   ============================================ */
+#stars-canvas {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+}
+
+/* ============================================
+   SCREENS
+   ============================================ */
+.screen {
+  position: fixed; inset: 0; z-index: 10;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 24px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.8s ease;
+  overflow-y: auto;
+}
+.screen.active { opacity: 1; pointer-events: all; }
+
+/* ============================================
+   FLOATING PARTICLES (hearts/stars overlay)
+   ============================================ */
+.particle {
+  position: fixed; z-index: 5; pointer-events: none;
+  animation: particleFall linear infinite;
+  font-size: 18px; opacity: 0;
+}
+@keyframes particleFall {
+  0%   { transform: translateY(-40px) rotate(0deg);   opacity: 0; }
+  10%  { opacity: 0.8; }
+  90%  { opacity: 0.6; }
+  100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+}
+
+/* ============================================
+   BUTTON STYLES
+   ============================================ */
+.btn {
+  font-family: var(--font-title);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 14px 40px;
+  border: none; border-radius: 50px;
+  cursor: pointer;
+  position: relative; overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: scale(0.97); }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--blue-light), var(--blue-glow));
+  color: var(--white);
+  box-shadow: 0 4px 30px rgba(77,139,255,0.5);
+}
+.btn-primary:hover { box-shadow: 0 6px 40px rgba(77,139,255,0.7); }
+
+.btn-rose {
+  background: linear-gradient(135deg, var(--accent-rose), var(--accent-pink));
+  color: var(--white);
+  box-shadow: 0 4px 30px rgba(255,75,126,0.4);
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1.5px solid var(--blue-glow);
+  color: var(--blue-soft);
+  box-shadow: 0 0 20px rgba(77,139,255,0.2);
+}
+.btn-ghost:hover { background: rgba(77,139,255,0.1); }
+
+/* ============================================
+   SCREEN 0 — OPENING
+   ============================================ */
+#screen-opening {
+  background: radial-gradient(ellipse at 50% 60%, #0c1f50 0%, var(--bg-deep) 70%);
+}
+
+.opening-badge {
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--blue-glow);
+  background: rgba(77,139,255,0.1);
+  border: 1px solid rgba(77,139,255,0.3);
+  padding: 6px 20px; border-radius: 50px;
+  margin-bottom: 32px;
+  animation: fadeSlideUp 1s 0.3s both;
+}
+
+.opening-title {
+  font-family: var(--font-title);
+  font-size: clamp(1.8rem, 6vw, 3.2rem);
+  color: var(--white);
+  text-align: center;
+  line-height: 1.3;
+  text-shadow: 0 0 60px rgba(77,139,255,0.6);
+  animation: fadeSlideUp 1s 0.6s both;
+  margin-bottom: 12px;
+}
+
+.opening-subtitle {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: clamp(1rem, 3vw, 1.4rem);
+  color: var(--blue-soft);
+  text-align: center;
+  animation: fadeSlideUp 1s 0.9s both;
+  margin-bottom: 48px;
+}
+
+.opening-moon {
+  font-size: 4rem;
+  margin-bottom: 24px;
+  animation: floatBob 4s ease-in-out infinite, fadeSlideUp 1s 0.2s both;
+  display: block; text-align: center;
+}
+
+.btn-start {
+  animation: fadeSlideUp 1s 1.2s both;
+  font-size: 0.85rem;
+  padding: 16px 56px;
+}
+
+.opening-hint {
+  margin-top: 20px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-family: var(--font-ui);
+  animation: fadeSlideUp 1s 1.5s both;
+}
+
+/* ============================================
+   LEVEL HEADER
+   ============================================ */
+.level-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.level-tag {
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--blue-glow);
+  opacity: 0.8;
+  display: block;
+  margin-bottom: 8px;
+}
+.level-title {
+  font-family: var(--font-title);
+  font-size: clamp(1.3rem, 5vw, 2.2rem);
+  color: var(--white);
+  text-shadow: 0 0 30px rgba(77,139,255,0.5);
+}
+.level-desc {
+  font-style: italic;
+  color: var(--blue-soft);
+  font-size: 1rem;
+  margin-top: 6px;
+}
+
+/* ============================================
+   SCREEN 1 — MEMORY
+   ============================================ */
+#screen-memory {
+  background: radial-gradient(ellipse at 30% 40%, #0d2052 0%, var(--bg-deep) 65%);
+}
+
+.memory-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  max-width: 480px;
+  width: 100%;
+  margin-bottom: 28px;
+}
+
+.memory-card {
+  aspect-ratio: 1;
+  border-radius: 14px;
+  background: var(--blue-dark);
+  border: 1.5px solid rgba(77,139,255,0.25);
+  cursor: pointer;
+  position: relative; overflow: hidden;
+  transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+  display: flex; align-items: center; justify-content: center;
+}
+.memory-card:hover { transform: scale(1.05); border-color: var(--blue-glow); }
+.memory-card.revealed {
+  border-color: var(--accent-pink);
+  box-shadow: 0 0 20px rgba(255,107,157,0.4);
+  cursor: default;
+}
+.memory-card.revealed:hover { transform: none; }
+
+.memory-card-front {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 8px;
+  background: linear-gradient(135deg, var(--blue-dark), var(--blue-mid));
+  transition: opacity 0.5s;
+}
+.memory-card-front span.emoji { font-size: 2rem; }
+.memory-card-front span.hint {
+  font-size: 0.65rem; color: var(--text-muted);
+  font-family: var(--font-ui); letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.memory-card-back {
+  position: absolute; inset: 0; padding: 10px;
+  display: flex; align-items: center; justify-content: center; flex-direction: column;
+  background: linear-gradient(135deg, #1a1040, #0a1a3e);
+  opacity: 0; transition: opacity 0.5s 0.2s;
+  text-align: center; gap: 6px;
+}
+.memory-card.revealed .memory-card-front { opacity: 0; }
+.memory-card.revealed .memory-card-back { opacity: 1; }
+
+.memory-card-back img {
+  width: 100%; height: 60%; object-fit: cover;
+  border-radius: 8px; margin-bottom: 4px;
+}
+.memory-card-back .memory-text {
+  font-size: 0.7rem; font-style: italic;
+  color: var(--blue-pale); line-height: 1.4;
+  /* === EDIT MEMORY TEXT DI SINI === */
+}
+.memory-card-back .memory-emoji { font-size: 1.2rem; }
+
+.memory-progress {
+  font-family: var(--font-ui);
+  font-size: 0.75rem; color: var(--text-muted);
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+}
+
+/* ============================================
+   SCREEN 2 — QUIZ
+   ============================================ */
+#screen-quiz {
+  background: radial-gradient(ellipse at 70% 30%, #0d1f4a 0%, var(--bg-deep) 65%);
+}
+
+.quiz-box {
+  background: rgba(10,26,62,0.7);
+  border: 1.5px solid rgba(77,139,255,0.2);
+  border-radius: 20px;
+  padding: 28px 24px;
+  max-width: 440px; width: 100%;
+  backdrop-filter: blur(10px);
+  margin-bottom: 20px;
+}
+.quiz-counter {
+  font-family: var(--font-ui);
+  font-size: 0.65rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--blue-glow);
+  margin-bottom: 16px;
+}
+.quiz-question {
+  font-size: clamp(1rem, 3.5vw, 1.3rem);
+  font-style: italic;
+  color: var(--white);
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+.quiz-options {
+  display: flex; flex-direction: column; gap: 10px;
+}
+.quiz-option {
+  padding: 12px 20px;
+  border-radius: 12px;
+  background: rgba(77,139,255,0.08);
+  border: 1.5px solid rgba(77,139,255,0.2);
+  color: var(--text-main);
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.25s;
+}
+.quiz-option:hover { background: rgba(77,139,255,0.18); border-color: var(--blue-glow); }
+.quiz-option.correct {
+  background: rgba(77,139,255,0.25);
+  border-color: var(--blue-glow);
+  color: var(--blue-pale);
+  pointer-events: none;
+}
+.quiz-option.wrong {
+  background: rgba(255,75,126,0.15);
+  border-color: var(--accent-rose);
+  color: #ffaac5;
+  pointer-events: none;
+}
+
+.quiz-feedback {
+  text-align: center;
+  font-style: italic;
+  font-size: 0.95rem;
+  min-height: 28px;
+  transition: all 0.3s;
+  color: var(--blue-soft);
+}
+.quiz-feedback.wrong-msg { color: var(--accent-pink); }
+.quiz-feedback.correct-msg { color: #7affb2; }
+
+/* ============================================
+   SCREEN 3 — DOOR
+   ============================================ */
+#screen-door {
+  background: radial-gradient(ellipse at 50% 70%, #0f1c4a 0%, var(--bg-deep) 65%);
+}
+
+.door-container {
+  display: flex; gap: 20px; justify-content: center;
+  flex-wrap: wrap; margin: 20px 0 28px;
+  max-width: 500px; width: 100%;
+}
+
+.door {
+  width: clamp(100px, 27vw, 140px);
+  aspect-ratio: 0.6;
+  border-radius: 80px 80px 6px 6px;
+  background: linear-gradient(180deg, var(--blue-mid), var(--blue-dark));
+  border: 2px solid rgba(77,139,255,0.3);
+  cursor: pointer; position: relative; overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 10px;
+}
+.door:hover {
+  transform: scale(1.05) translateY(-4px);
+  box-shadow: 0 12px 40px rgba(77,139,255,0.4);
+  border-color: var(--blue-glow);
+}
+.door-number {
+  font-family: var(--font-title);
+  font-size: 1.6rem;
+  color: var(--blue-soft);
+}
+.door-knob {
+  width: 14px; height: 14px; border-radius: 50%;
+  background: radial-gradient(circle, var(--gold), #c89030);
+  box-shadow: 0 0 8px rgba(240,192,96,0.5);
+}
+.door-star { font-size: 1.4rem; }
+.door.shake { animation: doorShake 0.4s ease; }
+.door.open {
+  border-color: var(--accent-pink);
+  box-shadow: 0 0 40px rgba(255,107,157,0.5);
+  animation: doorPulse 0.6s ease;
+}
+
+.door-msg {
+  text-align: center; font-style: italic;
+  color: var(--accent-pink); font-size: 1rem;
+  min-height: 28px; transition: all 0.3s;
+}
+.door-msg.correct-door { color: #7affb2; }
+
+/* ============================================
+   SCREEN 4 — FINAL
+   ============================================ */
+#screen-final {
+  background: radial-gradient(ellipse at 50% 40%, #0f2060 0%, var(--bg-deep) 65%);
+  text-align: center;
+  gap: 20px;
+}
+
+.final-photo-frame {
+  width: clamp(160px, 55vw, 260px);
+  aspect-ratio: 3/4;
+  border-radius: 20px;
+  border: 2px solid rgba(255,107,157,0.5);
+  box-shadow: 0 0 60px rgba(255,107,157,0.3), 0 0 120px rgba(77,139,255,0.2);
+  overflow: hidden; position: relative;
+  margin: 0 auto;
+}
+.final-photo-frame img {
+  width: 100%; height: 100%; object-fit: cover;
+}
+.final-photo-frame .frame-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(2,8,19,0.6) 0%, transparent 50%);
+}
+
+.final-title {
+  font-family: var(--font-title);
+  font-size: clamp(1.1rem, 4.5vw, 1.8rem);
+  color: var(--white);
+  text-shadow: 0 0 40px rgba(255,107,157,0.6);
+  line-height: 1.4;
+  animation: titlePulse 3s ease-in-out infinite;
+}
+.final-subtitle {
+  font-style: italic;
+  color: var(--blue-soft);
+  font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+}
+.final-date {
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+
+/* ============================================
+   SCREEN 5 — ENDING
+   ============================================ */
+#screen-ending {
+  background: radial-gradient(ellipse at 50% 50%, #0e1d50 0%, var(--bg-deep) 65%);
+  text-align: center; gap: 20px;
+}
+
+.ending-message-box {
+  max-width: 520px; width: 100%;
+  background: rgba(10,26,62,0.65);
+  border: 1.5px solid rgba(77,139,255,0.2);
+  border-radius: 20px;
+  padding: 28px 24px;
+  backdrop-filter: blur(16px);
+  margin: 0 auto;
+}
+.ending-title {
+  font-family: var(--font-title);
+  font-size: clamp(1rem, 3.5vw, 1.5rem);
+  color: var(--white);
+  margin-bottom: 16px;
+  text-shadow: 0 0 20px rgba(77,139,255,0.5);
+}
+.ending-text {
+  font-style: italic;
+  font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+  color: var(--text-main);
+  line-height: 1.9;
+  /* === EDIT PESAN ENDING DI SINI === */
+}
+.ending-sign {
+  margin-top: 16px;
+  font-family: var(--font-title);
+  font-size: 0.75rem;
+  color: var(--gold);
+  letter-spacing: 0.15em;
+}
+.ending-replay {
+  margin-top: 8px;
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-decoration: underline;
+  letter-spacing: 0.05em;
+}
+.ending-replay:hover { color: var(--blue-soft); }
+
+/* ============================================
+   MODAL POPUP
+   ============================================ */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(2,8,19,0.85); backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  opacity: 0; pointer-events: none; transition: opacity 0.4s;
+}
+.modal-overlay.show { opacity: 1; pointer-events: all; }
+
+.modal-card {
+  background: linear-gradient(135deg, var(--blue-dark), #0a1535);
+  border: 1.5px solid rgba(77,139,255,0.3);
+  border-radius: 20px; padding: 32px 28px;
+  max-width: 360px; width: 100%;
+  text-align: center;
+  transform: scale(0.85); transition: transform 0.4s;
+  box-shadow: 0 20px 80px rgba(0,0,0,0.6), var(--shadow-glow);
+}
+.modal-overlay.show .modal-card { transform: scale(1); }
+.modal-card-emoji { font-size: 2.5rem; margin-bottom: 12px; }
+.modal-card-title {
+  font-family: var(--font-title);
+  font-size: 1.1rem; color: var(--white);
+  margin-bottom: 10px;
+}
+.modal-card-text {
+  font-style: italic; font-size: 1rem;
+  color: var(--blue-soft); line-height: 1.6;
+  margin-bottom: 20px;
+}
+.modal-close { width: 100%; }
+
+/* ============================================
+   AUDIO CONTROL
+   ============================================ */
+#audio-btn {
+  position: fixed; bottom: 20px; right: 20px; z-index: 50;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(77,139,255,0.2);
+  border: 1.5px solid rgba(77,139,255,0.4);
+  color: var(--blue-soft);
+  cursor: pointer; font-size: 1.1rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.3s; backdrop-filter: blur(8px);
+  opacity: 0; pointer-events: none;
+}
+#audio-btn.visible { opacity: 1; pointer-events: all; }
+#audio-btn:hover { background: rgba(77,139,255,0.35); }
+
+/* ============================================
+   PROGRESS BAR
+   ============================================ */
+#progress-bar {
+  position: fixed; top: 0; left: 0; z-index: 50;
+  height: 3px; background: linear-gradient(90deg, var(--blue-light), var(--accent-pink));
+  transition: width 0.8s ease;
+  width: 0%;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes floatBob {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-12px); }
+}
+@keyframes doorShake {
+  0%,100% { transform: translateX(0); }
+  20%     { transform: translateX(-8px); }
+  40%     { transform: translateX(8px); }
+  60%     { transform: translateX(-5px); }
+  80%     { transform: translateX(5px); }
+}
+@keyframes doorPulse {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.08); }
+  100% { transform: scale(1.03); }
+}
+@keyframes titlePulse {
+  0%,100% { text-shadow: 0 0 40px rgba(255,107,157,0.6); }
+  50%     { text-shadow: 0 0 80px rgba(255,107,157,0.9), 0 0 120px rgba(77,139,255,0.4); }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 400px) {
+  .memory-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .door-container { gap: 14px; }
+  .door { width: 26vw; }
+}
+</style>
+</head>
+<body>
+
+<!-- PROGRESS BAR -->
+<div id="progress-bar"></div>
+
+<!-- STAR CANVAS -->
+<canvas id="stars-canvas"></canvas>
+
+<!-- AUDIO -->
+<!--
+  ============================================================
+  GANTI MUSIK:
+  Letakkan file musik di folder /assets/music/
+  Ubah src di bawah ini sesuai nama file kamu.
+  ============================================================
+-->
+<audio id="bg-music" loop>
+  <source src="romantic.mp3" type="audio/mpeg" />
+</audio>
+<button id="audio-btn" onclick="toggleMusic()" title="Toggle musik">🎵</button>
+
+<!-- ============================================================
+     SCREEN 0 — OPENING
+     ============================================================ -->
+<div id="screen-opening" class="screen active">
+  <span class="opening-badge">🌙 Special Birthday Edition</span>
+  <span class="opening-moon">💙</span>
+  <h1 class="opening-title">A Small Game<br>for Airin</h1>
+  <p class="opening-subtitle">sebuah cerita kecil, untukmu</p>
+  <button class="btn btn-primary btn-start" onclick="goTo('memory')">
+    ✦ Start Game ✦
+  </button>
+  <p class="opening-hint">tap untuk memulai petualangan</p>
+</div>
+
+<!-- ============================================================
+     SCREEN 1 — MEMORY
+     ============================================================ -->
+<div id="screen-memory" class="screen">
+  <div class="level-header">
+    <span class="level-tag">Level 01</span>
+    <h2 class="level-title">Memory Lane</h2>
+    <p class="level-desc">klik kartu kenangan kita 🌸</p>
+  </div>
+
+  <p class="memory-progress" id="memory-progress">0 / 6 terbuka</p>
+
+  <div class="memory-grid" id="memory-grid">
+    <!-- 6 kartu kenangan — edit teks & ganti foto di sini -->
+
+    <!-- KARTU 1 -->
+    <div class="memory-card" onclick="revealCard(this, 0)">
+      <div class="memory-card-front">
+        <span class="emoji">📸</span>
+        <span class="hint">tap</span>
+      </div>
+      <div class="memory-card-back">
+        <!--
+          GANTI FOTO: ubah src ke path foto, contoh: assets/photos/foto1.jpg
+          Jika tidak ada foto, hapus tag <img> dan biarkan emoji saja
+        -->
+        <img src="https://i.ibb.co.com/hFRzj8Fj/first-meet.jpg" alt="memory 1"
+             onerror="this.style.display='none'" />
+        <span class="memory-emoji">🌙</span>
+        <!--
+          EDIT TEKS KENANGAN DI BAWAH INI
+        -->
+        <p class="memory-text">pertama kali aku sadar kamu spesial banget...</p>
+      </div>
+    </div>
+
+    <!-- KARTU 2 -->
+    <div class="memory-card" onclick="revealCard(this, 1)">
+      <div class="memory-card-front">
+        <span class="emoji">💌</span>
+        <span class="hint">tap</span>
+      </div>
+      <div class="memory-card-back">
+        <img src="https://i.ibb.co.com/NgWPf9dB/first-holiday.jpg" alt="memory 2"
+             onerror="this.style.display='none'" />
+        <span class="memory-emoji">✨</span>
+        <p class="memory-text">pertama kali kita liburan bareng, and mamah suka ama kamu</p>
+      </div>
+    </div>
+
+    <!-- KARTU 3 -->
+    <div class="memory-card" onclick="revealCard(this, 2)">
+      <div class="memory-card-front">
+        <span class="emoji">🎵</span>
+        <span class="hint">tap</span>
+      </div>
+      <div class="memory-card-back">
+        <img src="https://i.ibb.co.com/wNgzgmPr/ac8f582ffc0f0506ee98b60f84898c06.jpg" alt="memory 3"
+             onerror="this.style.display='none'" />
+        <span class="memory-emoji">🎶</span>
+        <p class="memory-text">mungkin sekarang aku lagi suka yang berhasil,tapi aku mau kamu baca lirik lagu ini</p>
+      </div>
+    </div>
+
+    <!-- KARTU 4 -->
+    <div class="memory-card" onclick="revealCard(this, 3)">
+      <div class="memory-card-front">
+        <span class="emoji">🌟</span>
+        <span class="hint">tap</span>
+      </div>
+      <div class="memory-card-back">
+        <img src="https://i.ibb.co.com/RGzKqnMr/first-flowers.jpg" alt="memory 4"
+             onerror="this.style.display='none'" />
+        <span class="memory-emoji">💙</span>
+        <p class="memory-text">momen ini, aku simpan di hati paling dalam</p>
+      </div>
+    </div>
+
+    <!-- KARTU 5 -->
+    <div class="memory-card" onclick="revealCard(this, 4)">
+      <div class="memory-card-front">
+        <span class="emoji">🌸</span>
+        <span class="hint">tap</span>
+      </div>
+      <div class="memory-card-back">
+        <img src="https://i.ibb.co.com/qLVrBrCV/first-photobooth.jpg" alt="memory 5"
+             onerror="this.style.display='none'" />
+        <span class="memory-emoji">🌺</span>
+        <p class="memory-text">setiap foto sama kamu tuh bikin happy banget</p>
+      </div>
+    </div>
+
+    <!-- KARTU 6 -->
+    <div class="memory-card" onclick="revealCard(this, 5)">
+      <div class="memory-card-front">
+        <span class="emoji">🎀</span>
+        <span class="hint">tap</span>
+      </div>
+      <div class="memory-card-back">
+        <img src="https://i.ibb.co.com/Rkq8MPMM/ain.jpg" alt="memory 6"
+             onerror="this.style.display='none'" />
+        <span class="memory-emoji">🎀</span>
+        <p class="memory-text">dan ini... kenangan paling indah yang pernah ada baju aku dipake kamu mulu ♡</p>
+      </div>
+    </div>
+
+  </div>
+
+  <button class="btn btn-primary" id="memory-next-btn" style="display:none"
+          onclick="goTo('quiz')">
+    Next Level →
+  </button>
+</div>
+
+<!-- ============================================================
+     SCREEN 2 — QUIZ
+     ============================================================ -->
+<div id="screen-quiz" class="screen">
+  <div class="level-header">
+    <span class="level-tag">Level 02</span>
+    <h2 class="level-title">Our Little Quiz</h2>
+    <p class="level-desc">seberapa kamu tau tentang kita? 💭</p>
+  </div>
+
+  <div class="quiz-box">
+    <p class="quiz-counter" id="quiz-counter">Soal 1 / 3</p>
+    <p class="quiz-question" id="quiz-question">Loading...</p>
+    <div class="quiz-options" id="quiz-options"></div>
+  </div>
+  <p class="quiz-feedback" id="quiz-feedback"></p>
+</div>
+
+<!-- ============================================================
+     SCREEN 3 — DOOR
+     ============================================================ -->
+<div id="screen-door" class="screen">
+  <div class="level-header">
+    <span class="level-tag">Level 03</span>
+    <h2 class="level-title">Choose the Door</h2>
+    <p class="level-desc">hanya satu pintu yang membawa kebahagiaan ✨</p>
+  </div>
+
+  <div class="door-container">
+    <!--
+      GANTI: ubah data-correct="true" ke pintu yang benar
+      Sekarang pintu 2 yang benar (ubah sesuai keinginan)
+    -->
+    <div class="door" onclick="chooseDoor(this)" data-correct="false">
+      <span class="door-star">🌑</span>
+      <span class="door-number">I</span>
+      <span class="door-knob"></span>
+    </div>
+    <div class="door" onclick="chooseDoor(this)" data-correct="true">
+      <span class="door-star">💙</span>
+      <span class="door-number">II</span>
+      <span class="door-knob"></span>
+    </div>
+    <div class="door" onclick="chooseDoor(this)" data-correct="false">
+      <span class="door-star">🌑</span>
+      <span class="door-number">III</span>
+      <span class="door-knob"></span>
+    </div>
+  </div>
+
+  <p class="door-msg" id="door-msg">pilih dengan hati...</p>
+</div>
+
+<!-- ============================================================
+     SCREEN 4 — FINAL
+     ============================================================ -->
+<div id="screen-final" class="screen">
+  <p class="final-date">15 Maret 2025</p>
+  <div class="final-photo-frame">
+    <!--
+      GANTI FOTO UTAMA: ubah src ke foto/video favorit Airin
+      Untuk video, ganti <img> dengan <video autoplay loop muted playsinline>
+    -->
+    <img src="https://i.ibb.co.com/qLpZQ4W7/sukak.jpg" alt="Airin"
+         onerror="this.src=''" />
+    <div class="frame-overlay"></div>
+  </div>
+  <h1 class="final-title">
+    Selamat Ulang Tahun<br>Airin Nirinda Putri 🌙
+  </h1>
+  <p class="final-subtitle">18 tahun yang indah, dan semoga seterusnya</p>
+  <button class="btn btn-rose" onclick="goTo('ending')">
+    Lihat Pesan Untukmu 💌
+  </button>
+</div>
+
+<!-- ============================================================
+     SCREEN 5 — ENDING
+     ============================================================ -->
+<div id="screen-ending" class="screen">
+  <div class="level-header">
+    <span class="level-tag">✦ For You ✦</span>
+    <h2 class="level-title" style="color:var(--accent-pink)">Khusus Untukmu</h2>
+  </div>
+
+  <div class="ending-message-box">
+    <p class="ending-title">💌 Dear Airin,</p>
+    <!--
+      ============================================================
+      EDIT PESAN PANJANG DI SINI
+      ============================================================
+    -->
+    <p class="ending-text">
+      tadi kamu udah mainin game kecil yang aku bikin. mungkin simpel, mungkin gak susah, tapi itu cuma cara aku buat nganter kamu sampai ke pesan ini. setiap level itu kayak ngingetin aku ke perjalanan kamu sampai hari ini.
+      <br /><br />
+      sekarang kamu 18. orang lain mungkin cuma lihat angka, tapi aku lihat semua yang kamu lewatin. capek kamu, cerita kamu, dan cara kamu tetap bertahan sampai sekarang. aku bangga sama kamu, bukan cuma karena kamu ulang tahun, tapi karena kamu tetap jadi kamu. terima kasih sudah ada di hidup aku, sudah jadi tempat aku pulang, tempat aku cerita, tempat aku merasa cukup. aku gak butuh kamu jadi sempurna, cukup kamu yang sekarang. selamat ulang tahun ya. kalau dunia lagi gak baik ke kamu, ingat aja satu hal. aku tetap di sini, di sebelah kamu.
+      <br /><br />
+      I love you more than words can say. Happy Birthday, Airin 💙✨
+    </p>
+    <p class="ending-sign">— Dari yang selalu sayang kamu 🌙</p>
+  </div>
+
+  <span class="ending-replay" onclick="restartGame()">↩ Main lagi dari awal</span>
+</div>
+
+<!-- ============================================================
+     MODAL
+     ============================================================ -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-card">
+    <div class="modal-card-emoji" id="modal-emoji">✨</div>
+    <div class="modal-card-title" id="modal-title">Title</div>
+    <div class="modal-card-text" id="modal-text">Text</div>
+    <button class="btn btn-primary modal-close" onclick="closeModal()">OK!</button>
+  </div>
+</div>
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+/* ---- STAR CANVAS ---- */
+const canvas = document.getElementById('stars-canvas');
+const ctx = canvas.getContext('2d');
+let stars = [];
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+function initStars() {
+  stars = [];
+  for (let i = 0; i < 180; i++) {
+    stars.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.5 + 0.2,
+      a: Math.random(),
+      speed: Math.random() * 0.008 + 0.002,
+      phase: Math.random() * Math.PI * 2
+    });
+  }
+}
+function drawStars(t) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  stars.forEach(s => {
+    const alpha = 0.3 + 0.5 * Math.sin(t * s.speed + s.phase);
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(168, 196, 255, ${alpha})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+resizeCanvas(); initStars(); requestAnimationFrame(drawStars);
+window.addEventListener('resize', () => { resizeCanvas(); initStars(); });
+
+/* ---- PARTICLES ---- */
+const PARTICLE_SYMBOLS = ['💙','✨','🌙','⭐','💫','🌟','💕'];
+function spawnParticles(count = 20) {
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.textContent = PARTICLE_SYMBOLS[Math.floor(Math.random() * PARTICLE_SYMBOLS.length)];
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.fontSize = (12 + Math.random() * 16) + 'px';
+    const dur = 4 + Math.random() * 6;
+    p.style.animationDuration = dur + 's';
+    p.style.animationDelay = Math.random() * 4 + 's';
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), (dur + 4) * 1000);
+  }
+}
+
+/* ---- SCREEN NAVIGATION ---- */
+const SCREENS = {
+  opening: 'screen-opening',
+  memory:  'screen-memory',
+  quiz:    'screen-quiz',
+  door:    'screen-door',
+  final:   'screen-final',
+  ending:  'screen-ending'
+};
+const PROGRESS = { opening: 0, memory: 15, quiz: 40, door: 60, final: 80, ending: 100 };
+let currentScreen = 'opening';
+
+function goTo(name) {
+  document.getElementById(SCREENS[currentScreen]).classList.remove('active');
+  currentScreen = name;
+  const next = document.getElementById(SCREENS[name]);
+  next.classList.add('active');
+  document.getElementById('progress-bar').style.width = PROGRESS[name] + '%';
+
+  if (name === 'quiz')   initQuiz();
+  if (name === 'final')  { playMusic(); spawnParticles(30); }
+  if (name === 'ending') { spawnParticles(40); setTimeout(() => spawnParticles(40), 3000); }
+}
+
+function restartGame() {
+  memoryRevealed = 0;
+  document.querySelectorAll('.memory-card').forEach(c => c.classList.remove('revealed'));
+  document.getElementById('memory-progress').textContent = '0 / 6 terbuka';
+  document.getElementById('memory-next-btn').style.display = 'none';
+  quizIndex = 0;
+  goTo('opening');
+}
+
+/* ---- AUDIO ---- */
+const music = document.getElementById('bg-music');
+let musicOn = false;
+
+function playMusic() {
+  music.play().catch(() => {});
+  musicOn = true;
+  document.getElementById('audio-btn').textContent = '🎵';
+  document.getElementById('audio-btn').classList.add('visible');
+}
+function toggleMusic() {
+  if (musicOn) { music.pause(); musicOn = false; document.getElementById('audio-btn').textContent = '🔇'; }
+  else         { music.play(); musicOn = true;  document.getElementById('audio-btn').textContent = '🎵'; }
+}
+
+/* ---- MODAL ---- */
+function showModal(emoji, title, text, callback) {
+  document.getElementById('modal-emoji').textContent = emoji;
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-text').textContent = text;
+  document.getElementById('modal').classList.add('show');
+  window._modalCallback = callback || null;
+}
+function closeModal() {
+  document.getElementById('modal').classList.remove('show');
+  if (window._modalCallback) { window._modalCallback(); window._modalCallback = null; }
+}
+
+/* ---- MEMORY ---- */
+let memoryRevealed = 0;
+function revealCard(card, idx) {
+  if (card.classList.contains('revealed')) return;
+  card.classList.add('revealed');
+  memoryRevealed++;
+  document.getElementById('memory-progress').textContent = memoryRevealed + ' / 6 terbuka';
+  if (memoryRevealed === 6) {
+    setTimeout(() => {
+      document.getElementById('memory-next-btn').style.display = 'block';
+      showModal('💙', 'Semua kenangan terbuka!', 'kamu ingat semuanya... aku terharu ♡');
+    }, 400);
+  }
+}
+
+/* ---- QUIZ ---- */
+/*
+  ============================================================
+  EDIT SOAL QUIZ DI SINI
+  - question : pertanyaan
+  - options  : pilihan jawaban (array)
+  - correct  : index jawaban yang benar (0-based)
+  - wrongMsg : pesan jika salah
+  - rightMsg : pesan jika benar
+  ============================================================
+*/
+const QUIZ_DATA = [
+  {
+    question: "Siapa orang paling ganteng di dunia ini? 😏",
+    options: ["Gopal Wisnu", "AKUU PIYU", "Artis Korea", "Entah siapa"],
+    correct: 1,
+    wrongMsg: "Salah... pikir lagi hehe 😂",
+    rightMsg: "Yapp betul banget! 😍"
+  },
+  {
+    question: "Kapan kita mulai dekat satu sama lain? 🌙",
+    options: ["Tahun lalu", "Awal tahun ini", "Bulan lalu", "dari kandungan"],
+    /*
+      GANTI index correct sesuai jawaban yang bener
+      0 = Tahun lalu, 1 = Awal tahun ini, 2 = Bulan lalu, 3 = Sejak dulu
+    */
+    correct: 3,
+    wrongMsg: "Bukan itu... ingat-ingat lagi ya 🙈",
+    rightMsg: "Betul! udah lama banget kan ✨"
+  },
+  {
+    question: "Apa yang bikin kamu spesial di mataku? 💙",
+    options: ["Senyumnya", "Semuanya!", "Hatinya yang baik", "Nggak tau"],
+    correct: 1,
+    wrongMsg: "Hmm, hampir betul hehe...",
+    rightMsg: "Semuanya! karena kamu emang sempurna 💙"
+  }
+];
+
+let quizIndex = 0;
+let quizAnswered = false;
+
+function initQuiz() {
+  quizIndex = 0;
+  renderQuiz();
+}
+
+function renderQuiz() {
+  quizAnswered = false;
+  const q = QUIZ_DATA[quizIndex];
+  document.getElementById('quiz-counter').textContent = `Soal ${quizIndex + 1} / ${QUIZ_DATA.length}`;
+  document.getElementById('quiz-question').textContent = q.question;
+  document.getElementById('quiz-feedback').textContent = '';
+  document.getElementById('quiz-feedback').className = 'quiz-feedback';
+
+  const optContainer = document.getElementById('quiz-options');
+  optContainer.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option';
+    btn.textContent = opt;
+    btn.onclick = () => answerQuiz(i, btn);
+    optContainer.appendChild(btn);
+  });
+}
+
+function answerQuiz(idx, btn) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+  const q = QUIZ_DATA[quizIndex];
+  const fb = document.getElementById('quiz-feedback');
+  const allBtns = document.querySelectorAll('.quiz-option');
+
+  allBtns[q.correct].classList.add('correct');
+
+  if (idx === q.correct) {
+    fb.textContent = q.rightMsg;
+    fb.className = 'quiz-feedback correct-msg';
+    setTimeout(() => {
+      quizIndex++;
+      if (quizIndex < QUIZ_DATA.length) renderQuiz();
+      else {
+        showModal('🎉', 'Quiz Selesai!', 'Kamu tau segalanya tentang kita~ lanjut ke level berikutnya!', () => goTo('door'));
+      }
+    }, 1200);
+  } else {
+    btn.classList.add('wrong');
+    fb.textContent = q.wrongMsg;
+    fb.className = 'quiz-feedback wrong-msg';
+    setTimeout(() => {
+      quizAnswered = false;
+      btn.classList.remove('wrong');
+      allBtns[q.correct].classList.remove('correct');
+      fb.textContent = '';
+      fb.className = 'quiz-feedback';
+    }, 1400);
+  }
+}
+
+/* ---- DOOR ---- */
+let doorLocked = false;
+function chooseDoor(door) {
+  if (doorLocked) return;
+  const isCorrect = door.dataset.correct === 'true';
+  const msg = document.getElementById('door-msg');
+
+  if (!isCorrect) {
+    doorLocked = true;
+    door.classList.add('shake');
+    /*
+      EDIT PESAN SALAH PINTU DI SINI (ganti teks di bawah)
+    */
+    const funnyMsgs = [
+      "Salah pintu~ coba lagi hehe 😝",
+      "Bukan di sini sayang... 🙈",
+      "Aduh salah! tenang, coba lagi ya 💙"
+    ];
+    msg.textContent = funnyMsgs[Math.floor(Math.random() * funnyMsgs.length)];
+    msg.className = 'door-msg';
+    setTimeout(() => {
+      door.classList.remove('shake');
+      doorLocked = false;
+      msg.textContent = 'pilih dengan hati...';
+    }, 1200);
+  } else {
+    doorLocked = true;
+    door.classList.add('open');
+    msg.textContent = '✨ Yeay! pintu yang tepat!';
+    msg.className = 'door-msg correct-door';
+    setTimeout(() => goTo('final'), 1400);
+  }
+}
+</script>
+</body>
+</html>
